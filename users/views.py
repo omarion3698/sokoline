@@ -4,13 +4,14 @@ from knox.views import LoginView as KnoxLoginView
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
+from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer,UserProfileSerializer
 from django.views.decorators.debug import sensitive_post_parameters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import render, redirect
+from __future__ import unicode_literals
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 import json
 from .models import *
@@ -18,6 +19,7 @@ from .filters import OrderFilter
 from django.forms import inlineformset_factory
 # from .forms import OrderForm
 
+# Create your views here.
 # Register API
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -29,7 +31,15 @@ class RegisterAPI(generics.GenericAPIView):
         return Response({
         "user": UserSerializer(user, context=self.get_serializer_context()).data,
         "token": AuthToken.objects.create(user)[1]
-        })
+        })        
+
+
+class UserProfileAPI(APIView):
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(User, pk=kwargs['user_id'])
+        profile_serializer = UserProfileSerializer(UserProfile)
+        return Response(profile_serializer.data)
+
 
 # Login API
 class LoginAPI(KnoxLoginView):
@@ -105,7 +115,6 @@ def paymentComplete(request):
     product = Product.objects.get(id=body['productId'])
     Order.objects.create(product=product)
     return JsonResponse('Payment completed!', safe=False)
-
 
 
 # Search Api
