@@ -5,7 +5,9 @@ from PIL import Image
 from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
-from django.core.mail import send_mail  
+from django.core.mail import send_mail
+from pyuploadcare.dj.models import ImageField
+from pyuploadcare.dj.forms import FileWidget
 
 
 class UserProfile(models.Model):

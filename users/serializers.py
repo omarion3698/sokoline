@@ -18,9 +18,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
 
-        return user
-<<<<<<< HEAD
-    
+        return user    
     
 class UserProfileSerializer(serializers.ModelSerializer):
     """A serializer for our user profile objects."""
@@ -42,7 +40,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
-=======
       
 # Change Password
 class ChangePasswordSerializer(serializers.Serializer):
@@ -52,4 +49,3 @@ class ChangePasswordSerializer(serializers.Serializer):
     """
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
->>>>>>> 785504072747c02cb84bdca0cfb27bf61dd41302
