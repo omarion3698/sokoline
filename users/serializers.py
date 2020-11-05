@@ -1,14 +1,25 @@
-from rest_framework import generics, permissions, serializers
+from rest_framework import generics, permissions, serializers, exceptions
 from django.contrib.auth.models import User
 from . import models
+from django.contrib.auth import authenticate
+# from .models import Profile
 
 # User Serializer
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email')
-
+        
+# class ProfileSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Profile
+#         fields = ['id', 'designation', 'picture']
+        
 # Register Serializer
+<<<<<<< HEAD
+ 
+=======
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -20,6 +31,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user    
     
+>>>>>>> 722d4ea6cead892192f7bc6ea5519b250ad6d33c
 class UserProfileSerializer(serializers.ModelSerializer):
     """A serializer for our user profile objects."""
 
@@ -40,6 +52,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+    
+
+# class PurchasedProductsList(generics.ListAPIView):
+#     """
+#     Return a list of all the products that the authenticated
+#     user has ever purchased, with optional filtering.
+#     """
+#     # model = models.Product
+#     serializer_class = ProductSerializer
+#     filterset_class = ProductFilter
+
+#     def get_queryset(self):
+#         user = self.request.user
+#         return user.purchase_set.all()
+        
+
+
       
 # Change Password
 class ChangePasswordSerializer(serializers.Serializer):
