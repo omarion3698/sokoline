@@ -4,7 +4,6 @@ from django.db.models.signals import post_save
 from PIL import Image
 from django.dispatch import receiver
 
-
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_id = models.IntegerField(default=0, unique=True)
@@ -34,3 +33,4 @@ class UserProfile(models.Model):
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.UserProfile.save()
+        
