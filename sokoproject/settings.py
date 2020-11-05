@@ -56,17 +56,18 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 # Application definition
 INSTALLED_APPS = [
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
-    'rest_framework',
-    'knox',
     'django_rest_passwordreset',
     'django_filters',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -154,16 +155,8 @@ REST_FRAMEWORK = {
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        'knox.auth.TokenAuthentication',
-        
-    ]
-}
-
-REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 UPLOADCARE = {
     'pub_key': '2cebc1aa46eb38a0c0fe',
     'secret': '9605b7cdbc3db167beb7',

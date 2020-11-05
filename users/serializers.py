@@ -17,9 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
 #         fields = ['id', 'designation', 'picture']
         
 # Register Serializer
-<<<<<<< HEAD
- 
-=======
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -31,7 +28,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user    
     
->>>>>>> 722d4ea6cead892192f7bc6ea5519b250ad6d33c
 class UserProfileSerializer(serializers.ModelSerializer):
     """A serializer for our user profile objects."""
 

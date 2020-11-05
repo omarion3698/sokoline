@@ -87,8 +87,6 @@ class UserListView(generics.ListAPIView):
     ordering_fields = ['username', 'email']
     ordering = ['username']
     
-
-
     
 class ProductList(generics.ListAPIView):
     queryset = Product.objects.all()
@@ -227,7 +225,7 @@ class EmployeeListView(generics.ListAPIView):
     ordering_fields = ('is_active', 'username')
     ordering = ('username',)
     search_fields = ('username', 'first_name')
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # def simpleCheckout(request):
@@ -249,6 +247,9 @@ class EmployeeListView(generics.ListAPIView):
 #     product = Product.objects.get(id=body['productId'])
 #     Order.objects.create(product=product)
 #     return JsonResponse('Payment completed!', safe=False)
+
+
+
 
 
 # # Search Api
