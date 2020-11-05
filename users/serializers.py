@@ -17,7 +17,21 @@ class UserSerializer(serializers.ModelSerializer):
 #         fields = ['id', 'designation', 'picture']
         
 # Register Serializer
+<<<<<<< HEAD
  
+=======
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
+
+        return user    
+    
+>>>>>>> 722d4ea6cead892192f7bc6ea5519b250ad6d33c
 class UserProfileSerializer(serializers.ModelSerializer):
     """A serializer for our user profile objects."""
 
@@ -55,3 +69,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         
 
 
+      
+# Change Password
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)

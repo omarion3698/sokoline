@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions,status
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, UserProfileSerializer
+from .serializers import UserSerializer, UserProfileSerializer,RegisterSerializer, ChangePasswordSerializer
 from rest_framework.views import APIView
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 import json
+from knox.views import LoginView as KnoxLoginView
 from .models import UserProfile
 import django_filters.rest_framework
 from django_filters.rest_framework import DjangoFilterBackend
@@ -17,7 +18,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters import FilterSet
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import UpdateView
@@ -25,6 +26,29 @@ from django.urls import reverse_lazy, reverse
 from .forms import UserForm
 from .decorators import admin_hr_required, admin_only
         
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from django.views.decorators.debug import sensitive_post_parameters
+from rest_framework.permissions import IsAuthenticated
+from .models import *
+from .filters import OrderFilter
+from django.forms import inlineformset_factory
+# from .forms import OrderForm
+
+# Create your views here.
+# Register API
+class RegisterAPI(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+        "user": UserSerializer(user, context=self.get_serializer_context()).data,
+        "token": AuthToken.objects.create(user)[1]
+        })        
+
+
 class UserProfileAPI(APIView):
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs['user_id'])
@@ -45,6 +69,16 @@ class PurchaseList(generics.ListAPIView):
         if username is not None:
             queryset = queryset.filter(purchaser__username=username)
         return queryset
+# Login API
+class LoginAPI(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return super(LoginAPI, self).post(request, format=None)
 
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
@@ -193,3 +227,91 @@ class EmployeeListView(generics.ListAPIView):
     ordering_fields = ('is_active', 'username')
     ordering = ('username',)
     search_fields = ('username', 'first_name')
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# def simpleCheckout(request):
+# 	return render(request, 'users/simple_checkout.html')
+
+# def store(request):
+# 	products = Product.objects.all()
+# 	context = {'products':products}
+# 	return render(request, 'users/store.html', context)
+
+# def checkout(request, pk):
+# 	product = Product.objects.get(id=pk)
+# 	context = {'product':product}
+# 	return render(request, 'users/checkout.html', context)
+
+# def paymentComplete(request):
+#     body = json.loads(request.body)
+#     print('BODY:', body)
+#     product = Product.objects.get(id=body['productId'])
+#     Order.objects.create(product=product)
+#     return JsonResponse('Payment completed!', safe=False)
+
+
+# # Search Api
+# def home(request):
+# 	orders = Order.objects.all()
+# 	customers = Customer.objects.all()
+# 	total_customers = customers.count()
+# 	total_orders = orders.count()
+# 	delivered = orders.filter(status='Delivered').count()
+# 	pending = orders.filter(status='Pending').count()
+
+# 	context = {'orders':orders, 'customers':customers,
+# 	'total_orders':total_orders,'delivered':delivered,
+# 	'pending':pending }
+
+# 	return render(request, 'users/dashboard.html', context)
+
+# def products(request):
+# 	products = Product.objects.all()
+# 	return render(request, 'users/products.html', {'products':products})
+
+# def customer(request, pk_test):
+# 	customer = Customer.objects.get(id=pk_test)
+# 	orders = customer.order_set.all()
+# 	order_count = orders.count()
+# 	myFilter = OrderFilter(request.GET, queryset=orders)
+# 	orders = myFilter.qs 
+# 	context = {'customer':customer, 'orders':orders, 'order_count':order_count,
+# 	'myFilter':myFilter}
+# 	return render(request, 'users/customer.html',context)
+
+
+# def createOrder(request, pk):
+# 	OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'status'), extra=10)
+# 	customer = Customer.objects.get(id=pk)
+# 	formset = OrderFormSet(queryset=Order.objects.none(),instance=customer)
+# 	if request.method == 'POST':
+# 		formset = OrderFormSet(request.POST, instance=customer)
+# 		if formset.is_valid():
+# 			formset.save()
+# 			return redirect('/')
+
+# 	context = {'form':formset}
+# 	return render(request, 'users/order_form.html', context)
+
+# def updateOrder(request, pk):
+# 	order = Order.objects.get(id=pk)
+# 	form = OrderForm(instance=order)
+
+# 	if request.method == 'POST':
+# 		form = OrderForm(request.POST, instance=order)
+# 		if form.is_valid():
+# 			form.save()
+# 			return redirect('/')
+
+# 	context = {'form':form}
+# 	return render(request, 'users/order_form.html', context)
+
+# def deleteOrder(request, pk):
+# 	order = Order.objects.get(id=pk)
+# 	if request.method == "POST":
+# 		order.delete()
+# 		return redirect('/')
+
+# 	context = {'item':order}
+# 	return render(request, 'users/delete.html', context)
