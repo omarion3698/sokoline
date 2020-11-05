@@ -142,8 +142,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 # 	order_count = orders.count()
 # 	myFilter = OrderFilter(request.GET, queryset=orders)
 # 	orders = myFilter.qs 
-# 	context = {'customer':customer, 'orders':orders, 'order_count':order_count,
-# 	'myFilter':myFilter}
+# 	context = {'customer':customer, 'orders':orders, 'order_count':order_count, 'myFilter':myFilter}
 # 	return render(request, 'users/customer.html',context)
 
 
