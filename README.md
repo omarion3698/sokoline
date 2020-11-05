@@ -27,31 +27,31 @@ A website where a user can be a seller/buyer by posting items in the Market curr
 
 To come up with the same project...
 
-###### Clone the repository:
+##### Clone the repository:
   * https://github.com/omarion3698/sokoline.git
   
-###### Navigate into the folder and install requirements
+##### Navigate into the folder and install requirements
   * cd sokoline 
   * pip install -r requirements.txt
   
-###### Install and activate Virtual environment
+##### Install and activate Virtual environment
   * virtualenv venv
   * source venv/bin/activate
   
-###### Install Dependencies
+##### Install Dependencies
   * pip install -r requirements.txt
   
 ##### Setup Database
-###### SetUp your database User,Password, Host then make migrate
+##### SetUp your database User,Password, Host then make migrate
   * python manage.py makemigrations users
   
-###### Now Migrate
+##### Now Migrate
   * python manage.py migrate
   
-###### Run the application
+##### Run the application
   * python manage.py runserver
   
-###### Testing the application
+##### Testing the application
   * python manage.py test
   
 Open the application on your browser 127.0.0.1:8000.
