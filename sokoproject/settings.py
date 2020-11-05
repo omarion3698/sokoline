@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'django_rest_passwordreset',
-    'django_filters'
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -158,9 +158,12 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'knox.auth.TokenAuthentication',
+        
     ]
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 UPLOADCARE = {
     'pub_key': '2cebc1aa46eb38a0c0fe',
     'secret': '9605b7cdbc3db167beb7',
